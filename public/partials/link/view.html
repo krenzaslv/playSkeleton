@@ -1,0 +1,51 @@
+
+
+    <div class="row" ng-controller="LinkCtrl as lc">
+        &NonBreakingSpace;
+        <div class="jumbotron">
+            <h2>Sample Play app</h2>
+
+            <p class="pull-right">... an app combining AngularJs, MongoDb and Play Frameworks</p>
+        </div>
+
+
+        <div class="row">
+            <div class="form-group">
+                <h3>
+                    Links
+                    <a ng-href="/#/links/create" class="btn btn-primary pull-right" id="btn_link_create">Add Link</a>
+                </h3>
+                <hr>
+            </div>
+            <div class="form-group">
+                <input class="form-control" type="text" ng-model="searchText" placeholder="Type here to filter Links...">
+                <hr>
+            </div>
+
+
+            <table id="link_list" class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Url</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="link in lc.links | filter:searchText">
+                    <td>
+                        {{ link.url }}
+                    </td>
+                </tr>
+                <tr ng-hide="lc.links.length">
+                    <td colspan="3">
+                        <p class="text-center">No Links Found</p>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+            <hr>
+            <h4>Debug:</h4>
+            <pre>{{ lc.links| json }}</pre>
+        </div>
+
+    </div>
