@@ -1,9 +1,9 @@
-playSkelleton
+Play Skelleton
 =============
 Getting started
 --------------
-* **Install docker (https://www.docker.com/) or install mongodb manually (http://www.mongodb.org/)
-* **Install sbt (http://www.scala-sbt.org/)
+* Install docker (https://www.docker.com/) or install mongodb manually (http://www.mongodb.org/)
+* Install sbt (http://www.scala-sbt.org/)
 
 ```
 docker pull dockerfile/mongodb
