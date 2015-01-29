@@ -1,9 +1,6 @@
 package controllers
 
 import javax.inject.{Inject, Singleton}
-
-import javax.inject.{Inject, Singleton}
-
 import play.api.Logger
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json._
@@ -11,8 +8,6 @@ import play.api.mvc._
 import play.modules.reactivemongo.MongoController
 import play.modules.reactivemongo.json.collection.JSONCollection
 import reactivemongo.api.{Cursor, QueryOpts}
-import reactivemongo.core.commands.Count
-import services.UUIDGenerator
 
 import scala.concurrent.Future
 
@@ -42,11 +37,11 @@ class Links extends Controller with MongoController {
   }
 
   def findLinks = Action.async {
-    val cursor: Cursor[Link] = collection.
+    val cursor: Cursor[JsObject] = collection.
       find(Json.obj()).
-      cursor[Link]
+      cursor[JsObject]
 
-    val futureLinkList: Future[List[Link]] = cursor.collect[List]()
+    val futureLinkList: Future[List[JsObject]] = cursor.collect[List]()
 
     val futureLinkJsonArray: Future[JsArray] = futureLinkList.map { links =>
       Json.arr(links)

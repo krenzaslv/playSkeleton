@@ -1,16 +1,18 @@
 package controllers
 
-import javax.inject.{Inject, Singleton}
+import javax.inject.Singleton
 
+import models.JsonFormats._
+import models._
 import play.api.Logger
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.libs.json._
 import play.api.mvc._
 import play.modules.reactivemongo.MongoController
+import play.modules.reactivemongo.json.BSONFormats._
 import play.modules.reactivemongo.json.collection.JSONCollection
-import reactivemongo.api.{Cursor, QueryOpts}
-import reactivemongo.core.commands.Count
-import services.UUIDGenerator
+import reactivemongo.api.Cursor
+import reactivemongo.bson.BSONObjectID
 
 import scala.concurrent.Future
 
@@ -21,9 +23,6 @@ class Users extends Controller with MongoController {
   private final val logger = Logger
 
   def collection: JSONCollection = db.collection[JSONCollection]("users")
-
-  import models._
-  import models.JsonFormats._
 
   def createUser = Action.async(parse.json) {
     request =>
@@ -37,13 +36,14 @@ class Users extends Controller with MongoController {
       }.getOrElse(Future.successful(BadRequest("invalid json")))
   }
 
+
   def findUsers = Action.async {
-    val cursor: Cursor[User] = collection.
+    val cursor: Cursor[JsObject] = collection.
       find(Json.obj("active" -> true)).
       sort(Json.obj("created" -> -1)).
-      cursor[User]
+      cursor[JsObject]
 
-    val futureUsersList: Future[List[User]] = cursor.collect[List]()
+    val futureUsersList: Future[List[JsObject]] = cursor.collect[List]()
 
     val futurePersonsJsonArray: Future[JsArray] = futureUsersList.map { users =>
       Json.arr(users)
@@ -53,5 +53,21 @@ class Users extends Controller with MongoController {
         Ok(users(0))
     }
   }
+
+  def addLink(id: String) = Action.async(parse.json) {
+    request =>
+      request.body.validate[Link].map {
+        string =>
+          collection.update(Json.obj("_id" -> BSONObjectID(id)),
+            Json.obj("$push" -> Json.obj("user.links" ->string))
+            //Json.arr("links"  -> string)
+          ).map {
+            lastError =>
+              logger.debug(s"Successfully updated with LastError: $lastError")
+              Created(s"User Updated")
+          }
+      }.getOrElse(Future.successful(BadRequest("invalid json")))
+  }
+
 
 }

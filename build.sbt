@@ -17,7 +17,7 @@ libraryDependencies ++= Seq(
   "org.reactivemongo" %% "play2-reactivemongo" % "0.10.5.akka23-SNAPSHOT",
   "org.webjars" % "bootstrap" % "2.3.1",
   "org.webjars" % "requirejs" % "2.1.11-1",
-  "org.mockito" % "mockito-core" % "1.9.5" % "test"
-)
+  "org.mockito" % "mockito-core" % "1.9.5" % "test")
+
 
 lazy val main = (project in file(".")).enablePlugins(PlayScala)

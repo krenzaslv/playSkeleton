@@ -1,4 +1,4 @@
-Play Skelleton
+Play Skeleton
 =============
 Getting started
 --------------
