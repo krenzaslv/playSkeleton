@@ -34,6 +34,7 @@
                 </div>
             </div>
 
+
             <pre>{{ cuc.user | json }}</pre>
 
             <div class="form-group">
@@ -43,6 +44,27 @@
                     <button type="submit" class="btn btn-success" id="btn_create">Create User</button>
                 </div>
             </div>
+
+            <table id="link_list" class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Url</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="link in cuc.user.links| filter:searchText">
+                    <td>
+                        {{ link}}
+                    </td>
+                </tr>
+                <tr ng-hide="cuc.user.links.lenght">
+                    <td colspan="3">
+                        <p class="text-center">No links Found</p>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
 
 
         </form>

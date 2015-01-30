@@ -4,8 +4,9 @@ GET         /randomUUID              @controllers.Application.randomUUID
 
 # User API
 GET         /users                   @controllers.Users.findUsers
+GET         /user/:id                @controllers.Users.findUser(id)
 POST        /user                    @controllers.Users.createUser
-POST        /user/addLink/:id        @controllers.Users.addLink(id)
+POST        /user/addLink/:uuid      @controllers.Users.addLink(uuid)
 
 # Assets
 GET         /assets/*file            controllers.Assets.at(path="/public", file)

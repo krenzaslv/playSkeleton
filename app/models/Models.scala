@@ -1,34 +1,43 @@
 package models
 
-import reactivemongo.bson.BSONObjectID
-import play.modules.reactivemongo.json.BSONFormats._
 
-case class User(_id: Option[BSONObjectID],
+case class User(uuid: String,
                 age: Int,
                 firstName: String,
                 lastName: String,
                 active: Boolean,
-                links: List[Link])
+                links: Option[List[Link]]
+                 )
 
 case class Link(url: String)
 
 object JsonFormats {
 
-  import play.api.libs.json.Json
+  import play.api.libs.functional.syntax._
+  import play.api.libs.json.Reads._
+  import play.api.libs.json._
+
+  val userReads: Reads[User] = (
+    (JsPath \ "uuid").read[String] and
+      (JsPath \ "age").read[Int](min(0) keepAnd max(150)) and
+      (JsPath \ "firstName").read[String](minLength[String](2)) and
+      (JsPath \ "lastName").read[String](minLength[String](2)) and
+      (JsPath \ "active").read[Boolean] and
+      (JsPath \ "links").readNullable[List[Link]]
+    )(User.apply _)
+
+  val userWrites: Writes[User] = (
+    (JsPath \ "uuid").write[String] and
+      (JsPath \ "age").write[Int] and
+      (JsPath \ "firstName").write[String] and
+      (JsPath \ "lastName").write[String] and
+      (JsPath \ "active").write[Boolean] and
+      (JsPath \ "links").writeNullable[List[Link]]
+    )(unlift(User.unapply))
+
+  implicit val userFormat: Format[User] =
+    Format(userReads, userWrites)
+
 
   implicit val linkFormat = Json.format[Link]
-  implicit val userFormat = Json.format[User]
-//  implicit val bsonIdFormat = Json.format[BSONObjectID]
-
-  // val linkForm = Form(mapping("url" -> nonEmptyText(minLength = 3))(Link.apply _)(Link.unapply _))
-
-  /* val userForm = Form(
-     mapping(
-       "id" -> optional(of[String]),
-       "age" -> number,
-       "firstName" -> text,
-       "lastName" -> text,
-       "active" -> boolean,
-       "links" -> list(linkForm.mapping))(User.apply _)(User.unapply _))
- */
 }
