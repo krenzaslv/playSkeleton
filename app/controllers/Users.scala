@@ -54,11 +54,36 @@ class Users extends Controller with MongoController {
     }
   }
 
+  def deleteUser(id: String) = Action.async(parse.anyContent) { request =>
+    val futureResult = collection.remove(Json.obj("_id" -> Json.obj("$oid" -> id)), firstMatchOnly = true)
+    futureResult.map {
+      case t => t.inError match {
+        case true => InternalServerError("%s".format(t))
+        case false => Ok("success")
+      }
+    }
+  }
+
+  def updateUser() = Action.async(parse.json) {
+    request =>
+
+      request.body.validate[User].map {
+        user =>
+          logger.debug("Userid is: "+user._id.get.stringify)
+          collection.update(Json.obj("_id" -> Json.obj("$oid" -> user._id.get.stringify)), user).map {
+            lastError =>
+              logger.debug(s"Successfully updated with LastError: $lastError")
+              Created(s"User Updated")
+          }
+      }.getOrElse(Future.successful(BadRequest("invalid json")))
+  }
+
   def findUser(id: String) = Action.async {
     val cursor = collection.find(Json.obj("_id" -> Json.obj("$oid" -> id))).cursor[User]
     val futureUsersList: Future[List[User]] = cursor.collect[List]()
-    val futurePersonsJsonArray: Future[User] = futureUsersList.map { users =>
-      users.head
+    val futurePersonsJsonArray: Future[User] = futureUsersList.map {
+      users =>
+        users.head
     }
     futurePersonsJsonArray.map {
       user =>

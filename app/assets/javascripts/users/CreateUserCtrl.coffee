@@ -22,11 +22,10 @@ class CreateUserCtrl
           @$log.error "Unable to get User: #{error}"
       )
 
-  addLink: () ->
+  addLink: (uuid) ->
     @$log.debug "addLink()"
     @user.active = true
-    @$log.debug  @$scope
-    @UserService.addLink(@$routeParams.uuid, @$scope.formdata)
+    @UserService.addLink(uuid, @$scope.formdata)
     .then(
       (data) =>
         @$log.debug "Promise returned #{data} User"
@@ -36,6 +35,32 @@ class CreateUserCtrl
       (error) =>
         @$log.error "Unable to add link to user: #{error}"
     )
+
+  updateUser: () ->
+    @UserService.updateUser(@user)
+    .then(
+      (data) =>
+        @$log.debug "Promise returned #{data} User"
+        @user = data
+        @$location.path("/")
+    ,
+      (error) =>
+        @$log.error "Unable to update User: #{error}"
+    )
+
+
+  deleteUser: (uuid) ->
+    @$log.debug "deleteUser(#{uuid})"
+
+    @UserService.deleteUser(uuid)
+    .then(
+      (data) =>
+        @$log.debug "Promise returned #{angular.toJson(data, true)} User"
+    ,
+      (error) =>
+        @$log.error "Unable to delete User: #{error}"
+    )
+
 
   createUser: () ->
     @$log.debug "createUser()"

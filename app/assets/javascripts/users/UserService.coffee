@@ -55,13 +55,43 @@ class UserService
     @$log.debug "add Link  #{angular.toJson(url, true)} to userid " + userId
     deferred = @$q.defer()
 
-    @$http.post('/user/addLink/'+userId, url)
+    @$http.post('/user/addLink/' + userId, url)
     .success((data, status, headers) =>
       @$log.info("Successfully added Link to User - status #{status}")
       deferred.resolve(data)
     )
     .error((data, status, headers) =>
       @$log.error("Failed to add link to User- status #{status}")
+      deferred.reject(data);
+    )
+    deferred.promise
+
+  deleteUser: (uuid) ->
+    @$log.debug "deleteUser()"
+    deferred = @$q.defer()
+
+    @$http.delete("/user/#{uuid}")
+    .success((data, status, headers) =>
+      @$log.info("Successfully remove User - status #{status}")
+      deferred.resolve(data)
+    )
+    .error((data, status, headers) =>
+      @$log.error("Failed to remove User - status #{status}")
+      deferred.reject(data);
+    )
+    deferred.promise
+
+  updateUser: (user) ->
+    @$log.debug "updateUser #{angular.toJson(user, true)}"
+    deferred = @$q.defer()
+
+    @$http.post('/user/update', user)
+    .success((data, status, headers) =>
+      @$log.info("Successfully update User - status #{status}")
+      deferred.resolve(data)
+    )
+    .error((data, status, headers) =>
+      @$log.error("Failed to update user - status #{status}")
       deferred.reject(data);
     )
     deferred.promise
