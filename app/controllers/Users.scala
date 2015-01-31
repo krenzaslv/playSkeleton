@@ -2,17 +2,13 @@ package controllers
 
 import javax.inject.Singleton
 
-import models.JsonFormats._
-import models._
 import play.api.Logger
-import play.api.libs.concurrent.Execution.Implicits.defaultContext
+import play.api.libs.concurrent.Execution.Implicits._
 import play.api.libs.json._
 import play.api.mvc._
 import play.modules.reactivemongo.MongoController
-import play.modules.reactivemongo.json.BSONFormats._
 import play.modules.reactivemongo.json.collection.JSONCollection
-import reactivemongo.api.Cursor
-import reactivemongo.bson.BSONObjectID
+import reactivemongo.api._
 
 import scala.concurrent.Future
 
@@ -23,6 +19,10 @@ class Users extends Controller with MongoController {
   private final val logger = Logger
 
   def collection: JSONCollection = db.collection[JSONCollection]("users")
+
+
+  import models.JsonFormats._
+  import models._
 
   def createUser = Action.async(parse.json) {
     request =>
@@ -54,13 +54,24 @@ class Users extends Controller with MongoController {
     }
   }
 
+  def findUser(id: String) = Action.async {
+    val cursor = collection.find(Json.obj("_id" -> Json.obj("$oid" -> id))).cursor[User]
+    val futureUsersList: Future[List[User]] = cursor.collect[List]()
+    val futurePersonsJsonArray: Future[User] = futureUsersList.map { users =>
+      users.head
+    }
+    futurePersonsJsonArray.map {
+      user =>
+        Ok(userFormat.writes(user))
+    }
+  }
+
   def addLink(id: String) = Action.async(parse.json) {
     request =>
       request.body.validate[Link].map {
         string =>
-          collection.update(Json.obj("_id" -> BSONObjectID(id)),
-            Json.obj("$push" -> Json.obj("user.links" ->string))
-            //Json.arr("links"  -> string)
+          collection.update(Json.obj("_id" -> Json.obj("$oid" -> id)),
+            Json.obj("$push" -> Json.obj("links" -> string))
           ).map {
             lastError =>
               logger.debug(s"Successfully updated with LastError: $lastError")

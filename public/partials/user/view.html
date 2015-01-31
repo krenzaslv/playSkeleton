@@ -5,7 +5,7 @@
         <div class="jumbotron">
             <h2>Sample Play app</h2>
 
-            <p class="pull-right">... an app combining AngularJs, MongoDb and Play Frameworks</p>
+            <p class="pull-right">.. play around with play/p>
         </div>
 
 
@@ -26,6 +26,7 @@
             <table id="user_list" class="table table-striped">
                 <thead>
                 <tr>
+                    <th></th>
                     <th>FirstName</th>
                     <th>LastName</th>
                     <th>Age</th>
@@ -33,6 +34,9 @@
                 </thead>
                 <tbody>
                 <tr ng-repeat="usr in uc.users | filter:searchText">
+                    <td>
+                        <a ng-href="/#/user/{{usr._id.$oid}}" class="btn btn-primary" id="btn_user_detail"><i class="fa fa-pencil-square-o fa-fw"></i></a>
+                    </td>
                     <td>
                         {{ usr.firstName }}
                     </td>
