@@ -20,6 +20,9 @@ angular.module('myApp.routeConfig', ['ngRoute'])
   .when('/users/create', {
       templateUrl: '/assets/partials/user/create.html'
     })
+  .when('/user/:uuid', {
+      templateUrl: '/assets/partials/user/create.html'
+    })
   .otherwise({redirectTo: '/'})
 
 

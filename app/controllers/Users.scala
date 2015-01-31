@@ -3,14 +3,13 @@ package controllers
 import javax.inject.Singleton
 
 import play.api.Logger
+import play.api.libs.concurrent.Execution.Implicits._
 import play.api.libs.json._
 import play.api.mvc._
 import play.modules.reactivemongo.MongoController
-import play.modules.reactivemongo.json.BSONFormats._
 import play.modules.reactivemongo.json.collection.JSONCollection
 import reactivemongo.api._
-import reactivemongo.bson.BSONObjectID
-import play.api.libs.concurrent.Execution.Implicits._
+
 import scala.concurrent.Future
 
 @Singleton
@@ -55,10 +54,8 @@ class Users extends Controller with MongoController {
     }
   }
 
-  def findUser(ID: String) = Action.async {
-    val cursor: Cursor[User] = collection.
-      find(Json.obj("_ID" -> ID)).
-      cursor[User]
+  def findUser(id: String) = Action.async {
+    val cursor = collection.find(Json.obj("_id" -> Json.obj("$oid" -> id))).cursor[User]
     val futureUsersList: Future[List[User]] = cursor.collect[List]()
     val futurePersonsJsonArray: Future[User] = futureUsersList.map { users =>
       users.head
@@ -73,9 +70,8 @@ class Users extends Controller with MongoController {
     request =>
       request.body.validate[Link].map {
         string =>
-          collection.update(Json.obj("_id" -> BSONObjectID(id)),
+          collection.update(Json.obj("_id" -> Json.obj("$oid" -> id)),
             Json.obj("$push" -> Json.obj("links" -> string))
-            //Json.arr("links"  -> string)
           ).map {
             lastError =>
               logger.debug(s"Successfully updated with LastError: $lastError")

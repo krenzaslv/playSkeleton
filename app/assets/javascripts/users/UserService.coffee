@@ -36,28 +36,11 @@ class UserService
     )
     deferred.promise
 
-
-  generateUUID: () ->
-    @$log.debug "generate UUID"
-    deferred = @$q.defer()
-
-    @$http.get("/randomUUID")
-    .success((data, status, headers) =>
-      @$log.info("Successfully retrieve UUID - status #{status}")
-      deferred.resolve(data)
-      @$log.debug "UUID #{data}"
-    )
-    .error((data, status, headers) =>
-      @$log.error("Failed to retrieve UUID - status #{status}")
-      deferred.reject(data);
-    )
-    deferred.promise
-
-###  getUser: (id) ->
+  getUser: (uuid) ->
     @$log.debug "getUser()"
     deferred = @$q.defer()
 
-    @$http.get("/user/#{id}")
+    @$http.get("/user/#{uuid}")
     .success((data, status, headers) =>
       @$log.info("Successfully retrieve User - status #{status}")
       deferred.resolve(data)
@@ -67,8 +50,6 @@ class UserService
       deferred.reject(data);
     )
     deferred.promise
-
-###
 
 ###addLink: (userId, url) ->
   @$log.debug "add Link  #{angular.toJson(url, true)} to userid" + userId

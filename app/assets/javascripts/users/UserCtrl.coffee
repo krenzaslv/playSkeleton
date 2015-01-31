@@ -18,5 +18,4 @@ class UserCtrl
         @$log.error "Unable to get Users: #{error}"
     )
 
-
 controllersModule.controller('UserCtrl', UserCtrl)

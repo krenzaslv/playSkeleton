@@ -35,7 +35,7 @@
                 <tbody>
                 <tr ng-repeat="usr in uc.users | filter:searchText">
                     <td>
-                        <a ng-href="/#/user/{{usr.uuid}}" class="btn btn-primary" id="btn_user_detail"><i class="fa fa-pencil-square-o fa-fw"></i></a>
+                        <a ng-href="/#/user/{{usr._id.$oid}}" class="btn btn-primary" id="btn_user_detail"><i class="fa fa-pencil-square-o fa-fw"></i></a>
                     </td>
                     <td>
                         {{ usr.firstName }}
