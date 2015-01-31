@@ -1,7 +1,7 @@
 class CreateUserCtrl
 
 
-  constructor: (@$log, @$location, @$routeParams, @UserService) ->
+  constructor: (@$log, @$location, @$routeParams, @UserService, @$scope) ->
     @$log.debug "constructing CreateUserController"
     @user = {}
     @doUpdate = false
@@ -21,6 +21,21 @@ class CreateUserCtrl
         (error) =>
           @$log.error "Unable to get User: #{error}"
       )
+
+  addLink: () ->
+    @$log.debug "addLink()"
+    @user.active = true
+    @$log.debug  @$scope
+    @UserService.addLink(@$routeParams.uuid, @$scope.formdata)
+    .then(
+      (data) =>
+        @$log.debug "Promise returned #{data} User"
+        @user = data
+        @$location.path("/")
+    ,
+      (error) =>
+        @$log.error "Unable to add link to user: #{error}"
+    )
 
   createUser: () ->
     @$log.debug "createUser()"

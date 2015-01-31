@@ -51,18 +51,19 @@ class UserService
     )
     deferred.promise
 
-###addLink: (userId, url) ->
-  @$log.debug "add Link  #{angular.toJson(url, true)} to userid" + userId
-  deferred = @$q.defer()
-  @$http.post('/user/addLink/+'userId, url)
-  .success((data, status, headers) =>
-    @$log.info("Successfully added Link to User - status #{status}")
-    deferred.resolve(data)
-  )
-  .error((data, status, headers) =>
-    @$log.error("Failed to add link to User- status #{status}")
-    deferred.reject(data);
-  )
-  deferred.promise
-###
+  addLink: (userId, url) ->
+    @$log.debug "add Link  #{angular.toJson(url, true)} to userid " + userId
+    deferred = @$q.defer()
+
+    @$http.post('/user/addLink/'+userId, url)
+    .success((data, status, headers) =>
+      @$log.info("Successfully added Link to User - status #{status}")
+      deferred.resolve(data)
+    )
+    .error((data, status, headers) =>
+      @$log.error("Failed to add link to User- status #{status}")
+      deferred.reject(data);
+    )
+    deferred.promise
+
 servicesModule.service('UserService', UserService)

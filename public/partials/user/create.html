@@ -1,5 +1,6 @@
 <div class="row">
-    <div ng-controller="CreateUserCtrl as cuc">
+    <div ng-controller="CreateUserCtrl as cuc" >
+        AddLinkToUserCtrl
         <h1 ng-hide="!cuc.doUpdate">User Detail</h1>
 
         <h1 ng-hide="cuc.doUpdate">Create User</h1>
@@ -47,28 +48,45 @@
                 </div>
             </div>
 
-            <table id="link_list" class="table table-striped">
-                <thead>
-                <tr>
-                    <th>Url</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr ng-repeat="link in cuc.user.links| filter:searchText">
-                    <td>
-                        {{link}}
-                    </td>
-                </tr>
-                <tr ng-hide="cuc.user.links.lenght">
-                    <td colspan="3">
-                        <p class="text-center">No links Found</p>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-
-
         </form>
+
+        <table id="link_list" class="table table-striped">
+            <thead>
+            <tr>
+                <th>Url</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="link in cuc.user.links| filter:searchText">
+                <td>
+                    <a href="{{link.url}}">{{link.url}}</a>
+                </td>
+            </tr>
+
+            <tr ng-hide="cuc.user.links">
+                <td colspan="3">
+                    <p class="text-center">No links Found</p>
+                </td>
+            </tr>
+
+            <tr ng-hide="!cuc.doUpdate">
+                <td>
+                    <form id="AddLinkForm" name="CreateUserForm" class="form-horizontal" role="form"
+                          ng-submit="cuc.addLink()">
+
+                        <div class="input-group">
+                            <input type="url" ng-model="formdata.url" class="form-control" placeholder="add Url...">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-default" type="submit"><span class="glyphicon glyphicon-plus"></span></button>
+                                </span>
+                        </div>
+
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
     </div>
 </div>
 
