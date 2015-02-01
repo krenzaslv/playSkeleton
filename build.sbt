@@ -21,6 +21,6 @@ libraryDependencies ++= Seq(
   "org.webjars" % "requirejs" % "2.1.11-1",
   "org.mockito" % "mockito-core" % "1.9.5" % "test")
 
-dockerExposedPorts in Docker := Seq(9000, 9443)
+dockerExposedPorts in Docker := Seq(9000)
 
 maintainer := "krenzaslv"
