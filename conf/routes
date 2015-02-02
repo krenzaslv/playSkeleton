@@ -1,11 +1,14 @@
 # UUID Service
-GET         /                        @controllers.Application.index
-GET         /randomUUID              @controllers.Application.randomUUID
+GET           /                          @controllers.Application.index
+GET           /randomUUID                @controllers.Application.randomUUID
 
 # User API
-GET         /users                   @controllers.Users.findUsers
-POST        /user                    @controllers.Users.createUser
-POST        /user/addLink/:id        @controllers.Users.addLink(id)
+GET           /users                     @controllers.Users.findUsers
+GET           /user/:uuid                @controllers.Users.findUser(uuid)
+POST          /user                      @controllers.Users.createUser
+POST          /user/addLink/:uuid        @controllers.Users.addLink(uuid)
+POST          /user/update               @controllers.Users.updateUser
+DELETE        /user/:uuid                @controllers.Users.deleteUser(uuid)
 
 # Assets
-GET         /assets/*file            controllers.Assets.at(path="/public", file)
+GET           /assets/*file              controllers.Assets.at(path="/public", file)

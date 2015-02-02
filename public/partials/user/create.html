@@ -1,9 +1,11 @@
 <div class="row">
-    <div ng-controller="CreateUserCtrl as cuc">
-        <h1>Create User</h1>
+    <div ng-controller="CreateUserCtrl as cuc" >
+        <h1 ng-hide="!cuc.doUpdate">User Detail</h1>
+
+        <h1 ng-hide="cuc.doUpdate">Create User</h1>
 
         <form id="CreateUserForm" name="CreateUserForm" class="form-horizontal" role="form"
-              ng-submit="cuc.createUser()">
+              ng-submit="cuc.doUpdate ? cuc.updateUser() : cuc.createUser()">
             <legend class="sm-col-12">Basic Information</legend>
 
             <div class="form-group">
@@ -34,18 +36,63 @@
                 </div>
             </div>
 
+
             <pre>{{ cuc.user | json }}</pre>
 
             <div class="form-group">
                 <div class="col-sm-offset-4 col-sm-8 text-right">
                     <a ng-href="/#/" id="btn_cancel" class="btn btn-warning">Cancel</a>
 
-                    <button type="submit" class="btn btn-success" id="btn_create">Create User</button>
+                    <button type="submit" class="btn btn-success" id="btn_create">
+                        <div  ng-hide="cuc.doUpdate">Create User</div>
+                        <div ng-hide="!cuc.doUpdate">Update User</div>
+                    </button>
+
+                    <a ng-hide="!cuc.doUpdate" ng-click="cuc.deleteUser(cuc.user._id.$oid)" confirm-click ng-href="/#/" id="btn_delete" class="btn btn-danger">
+                            <i class="fa fa-times fa-fw"></i>Delete</a>
+
                 </div>
             </div>
 
-
         </form>
+
+        <table id="link_list" class="table table-striped">
+            <thead>
+            <tr>
+                <th>Url</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="link in cuc.user.links| filter:searchText">
+                <td>
+                    <a href="{{link.url}}">{{link.url}}</a>
+                </td>
+            </tr>
+
+            <tr ng-hide="cuc.user.links">
+                <td colspan="3">
+                    <p class="text-center">No links Found</p>
+                </td>
+            </tr>
+
+            <tr ng-hide="!cuc.doUpdate">
+                <td>
+                    <form id="AddLinkForm" name="CreateUserForm" class="form-horizontal" role="form"
+                          ng-submit="cuc.addLink(cuc.user._id.$oid)">
+
+                        <div class="input-group">
+                            <input type="url" ng-model="formdata.url" class="form-control" placeholder="add Url...">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-default" type="submit"><span class="glyphicon glyphicon-plus"></span></button>
+                                </span>
+                        </div>
+
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
     </div>
 </div>
 

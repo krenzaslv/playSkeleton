@@ -20,14 +20,11 @@ angular.module('myApp.routeConfig', ['ngRoute'])
   .when('/users/create', {
       templateUrl: '/assets/partials/user/create.html'
     })
-  .otherwise({redirectTo: '/'})
-  .when('/links/create', {
-      templateUrl: '/assets/partials/link/create.html'
-    })
-  .when('/links', {
-      templateUrl: '/assets/partials/link/view.html'
+  .when('/user/:uuid', {
+      templateUrl: '/assets/partials/user/create.html'
     })
   .otherwise({redirectTo: '/'})
+
 
 @commonModule = angular.module('myApp.common', [])
 @controllersModule = angular.module('myApp.controllers', [])
