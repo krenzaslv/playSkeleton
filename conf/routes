@@ -1,6 +1,4 @@
-# UUID Service
 GET           /                          @controllers.Application.index
-GET           /randomUUID                @controllers.Application.randomUUID
 
 # User API
 GET           /users                     @controllers.Users.findUsers

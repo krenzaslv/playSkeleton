@@ -9,20 +9,17 @@ import play.api.mvc._
 import play.modules.reactivemongo.MongoController
 import play.modules.reactivemongo.json.collection.JSONCollection
 import reactivemongo.api._
-
 import scala.concurrent.Future
 
 @Singleton
-class Users extends Controller with MongoController {
-
+class Users extends Controller with MongoController{
 
   private final val logger = Logger
 
   def collection: JSONCollection = db.collection[JSONCollection]("users")
 
-
-  import models.JsonFormats._
   import models._
+  import models.JsonFormats._
 
   def createUser = Action.async(parse.json) {
     request =>
@@ -40,7 +37,6 @@ class Users extends Controller with MongoController {
   def findUsers = Action.async {
     val cursor: Cursor[JsObject] = collection.
       find(Json.obj("active" -> true)).
-      sort(Json.obj("created" -> -1)).
       cursor[JsObject]
 
     val futureUsersList: Future[List[JsObject]] = cursor.collect[List]()

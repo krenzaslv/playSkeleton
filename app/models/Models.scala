@@ -8,8 +8,7 @@ case class User(_id: Option[BSONObjectID],
                 firstName: String,
                 lastName: String,
                 active: Boolean,
-                links: Option[List[Link]]
-                 )
+                links: Option[List[Link]])
 
 case class Link(url: String)
 

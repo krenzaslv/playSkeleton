@@ -1,16 +1,20 @@
 package controllers
 
-
-import scala.concurrent._
-import duration._
-import org.specs2.mutable._
-
-import play.api.libs.json._
-import play.api.test._
-import play.api.test.Helpers._
 import java.util.concurrent.TimeUnit
 
-class UsersIT extends Specification{
+import com.github.athieriot.EmbedConnection
+import org.junit.runner.RunWith
+import org.specs2.mutable._
+import org.specs2.runner.JUnitRunner
+import play.api.libs.json._
+import play.api.test.Helpers._
+import play.api.test._
+
+import scala.concurrent._
+import scala.concurrent.duration._
+
+@RunWith(classOf[JUnitRunner])
+class UserSpec extends Specification with EmbedConnection {
 
   val timeout: FiniteDuration = FiniteDuration(5, TimeUnit.SECONDS)
 
@@ -46,6 +50,7 @@ class UsersIT extends Specification{
 
   }
 
-
-
+  override def embedConnectionPort: scala.Int = {
+    return 27017;
+  }
 }
